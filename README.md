@@ -126,3 +126,76 @@ Soal 3
     answer : Isi perintah kode ini adalah untuk membuat Stream warna yang berubah setiap satu detik. Ini dilakukan dengan menghasilkan nilai dari stream Stream.periodic, yang menghasilkan nilai integer setiap detik, yang kemudian digunakan untuk menentukan indeks warna.
 
 -Lakukan commit hasil jawaban Soal 3 dengan pesan "W13: Jawaban Soal 3"
+
+**second form of main.dart**
+
+    //import 'dart:ffi';
+
+    import 'package:flutter/material.dart';
+    import 'stream.dart';
+
+    void main() {
+    runApp(const MyApp());
+    }
+
+    class MyApp extends StatelessWidget {
+    const MyApp({super.key});
+
+    @override
+    Widget build(BuildContext context) {
+        return MaterialApp(
+        title: 'Stream - Arya',
+        theme: ThemeData(
+            primarySwatch: Colors.blue,
+        ),
+        home: const StreamHomepage(),
+        );
+    }
+    }
+
+    class StreamHomepage extends StatefulWidget {
+    const StreamHomepage({super.key});
+
+    @override
+    State<StreamHomepage> createState() => _StreamPageState();
+    }
+
+    class _StreamPageState extends State<StreamHomepage> {
+    Color bgColor = Colors.blueGrey;
+    late ColorStream colorStream;
+
+    void changeColor() async {
+        await for (var eventColor in colorStream.getColors()) {
+        setState(() {
+            bgColor = eventColor;
+        });
+        }
+    }
+
+    @override
+    void initState() {
+        super.initState();
+        colorStream = ColorStream();
+        changeColor();
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+            appBar: AppBar(
+            title: const Text('Stream - Arya'),
+            ),
+            body: Container(
+            decoration: BoxDecoration(color: bgColor),
+            ));
+    }
+    }
+
+**hasil Run**
+
+![hape](docs/Praktikum%201/hape.gif)
+
+**Soal 4**
+
+-Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+-Lakukan commit hasil jawaban Soal 4 dengan pesan "W13: Jawaban Soal 4"
