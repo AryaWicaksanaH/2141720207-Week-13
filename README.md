@@ -394,3 +394,179 @@ answer :
 
 -Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
 -Lalu lakukan commit dengan pesan "W13: Jawaban Soal 6".
+
+**fourth form of stream.dart**
+
+    import 'package:flutter/material.dart';
+    import 'dart:async';
+
+    class ColorStream {
+    final List<Color> colors = [
+        Colors.blueGrey,
+        Colors.amber,
+        Colors.deepPurple,
+        Colors.lightBlue,
+        Colors.teal,
+        Colors.red,
+        Colors.orange,
+        Colors.greenAccent,
+        Colors.deepOrange,
+        Colors.cyanAccent
+    ];
+
+    Stream<Color> getColors() async* {
+        yield* Stream.periodic(const Duration(seconds: 1), (int t) {
+        int index = t % colors.length;
+        return colors[index];
+        });
+    }
+    }
+
+    class NumberStream {
+    final StreamController<int> controller = StreamController<int>();
+
+    void addNumberToSink(int newNumber) {
+        controller.sink.add(newNumber);
+        close() {
+        controller.close();
+        }
+    }
+
+    addError() {
+        controller.sink.addError('error');
+    }
+    }
+
+
+**fourth form of main.dart**
+
+    //import 'dart:ffi';
+    import 'package:flutter/material.dart';
+    import 'stream.dart';
+    import 'dart:async';
+    import 'dart:math';
+
+    void main() {
+    runApp(const MyApp());
+    }
+
+    class MyApp extends StatelessWidget {
+    const MyApp({super.key});
+
+    @override
+    Widget build(BuildContext context) {
+        return MaterialApp(
+        title: 'Stream - Arya',
+        theme: ThemeData(
+            primarySwatch: Colors.blue,
+        ),
+        home: const StreamHomepage(),
+        );
+    }
+    }
+
+    class StreamHomepage extends StatefulWidget {
+    const StreamHomepage({super.key});
+
+    @override
+    State<StreamHomepage> createState() => _StreamHomePageState();
+    }
+
+    class _StreamHomePageState extends State<StreamHomepage> {
+    int lastNumber = 0;
+    Color bgColor = Colors.blueGrey;
+    late ColorStream colorStream;
+    late StreamController numberStreamController;
+    late NumberStream numberStream;
+
+    void changeColor() async {
+        colorStream.getColors().listen((eventColor) {
+        setState(() {
+            bgColor = eventColor;
+        });
+        });
+    }
+
+    @override
+    void initState() {
+        numberStream = NumberStream();
+        numberStreamController = numberStream.controller;
+        Stream stream = numberStreamController.stream;
+        stream.listen((event) {
+        setState(() {
+            lastNumber = event;
+        });
+        }).onError((error) {
+        setState(() {
+            lastNumber = -1;
+        });
+        });
+        super.initState();
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+        appBar: AppBar(
+            title: const Text('Stream - Arya'),
+        ),
+        body: SizedBox(
+            width: double.infinity,
+            child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+                Text(lastNumber.toString()),
+                ElevatedButton(
+                onPressed: () => addRandomNumber(),
+                child: const Text('New Random Number'),
+                )
+            ],
+            ),
+        ),
+        );
+    }
+
+    @override
+    void dispose() {
+        numberStreamController.close();
+        super.dispose();
+    }
+
+    void addRandomNumber() {
+        Random random = Random();
+        // int myNum = random.nextInt(10);
+        // numberStream.addNumberToSink(myNum);
+        numberStream.addError();
+    }
+    }
+
+**Soal 7**
+
+-Jelaskan maksud kode langkah 13 sampai 15 tersebut!
+
+answer :
+
+    langkah 13 : 
+    menambahkan metode addError() ke kelas Stream, yang digunakan untuk menambahkan error ke stream.
+    
+    langkah 15 : 
+    mengubah metode addRandomNumber(). Lalu, mengomentari dua baris kode yang digunakan sebelumnya untuk menambahkan angka acak ke stream, dan kemudian kita menambahkan kode baru untuk menambahkan error ke stream.
+
+-Kembalikan kode seperti semula pada Langkah 15, comment addError() agar Anda dapat melanjutkan ke praktikum 3 berikutnya.
+
+**main.dart**
+
+    void addRandomNumber() {
+        Random random = Random();
+        int myNum = random.nextInt(10);
+        numberStream.addNumberToSink(myNum);
+    }
+
+**stream.dart**
+
+    // addError() {
+    //   controller.sink.addError('error');
+    // }
+
+-Lalu lakukan commit dengan pesan "W13: Jawaban Soal 7".
