@@ -1136,4 +1136,6 @@ answer :
 
 -Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
 
+![hape](docs/Praktikum%205/hape.gif)
+
 -Lalu lakukan commit dengan pesan "W13: Jawaban Soal 10,11".
