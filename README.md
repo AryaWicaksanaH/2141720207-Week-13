@@ -199,3 +199,42 @@ Soal 3
 
 -Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
 -Lakukan commit hasil jawaban Soal 4 dengan pesan "W13: Jawaban Soal 4"
+
+**changeColor() method (yes, you'll get error. don't be afraid)**
+
+    void changeColor() async {
+        // await for (var eventColor in colorStream.getColors()) {
+        //   setState(() {
+        //     bgColor = eventColor;
+        //   });
+        colorStream.getColors().listen((eventColor) {
+        setState(() {
+            bgColor = eventColor;
+        });
+        });
+        }
+    }
+
+**Soal 5**
+
+-Jelaskan perbedaan menggunakan listen dan await for (langkah 9) !
+
+answer : 
+
+    untuk Listen :
+
+    1. Sifat Sinkron-Asinkron: Metode listen bersifat asinkron, yang berarti eksekusi program dapat melanjutkan ke baris kode berikutnya tanpa menunggu pengiriman data ke stream selesai. 
+    
+    2. Fleksibilitas Handling: Metode listen memungkinkan eksekusi program untuk menentukan handler fungsi yang akan dijalankan setiap kali ada perubahan pada stream. 
+    
+    3. Non-blocking: Penggunaan metode listen memungkinkan eksekusi program untuk melanjutkan ke baris kode berikutnya tanpa harus menunggu pengiriman data ke stream selesai.
+
+    untuk await for :
+
+    1. Sifat Sinkron: Metode await for adalah sinkron, yang berarti eksekusi program akan menunggu hingga data tersedia di stream sebelum melanjutkan ke baris kode berikutnya.
+
+    2. Penggunaan Iterator: Penggunaan menunggu untuk mengambil nilai dari stream secara individual mirip dengan penggunaan iterator.
+
+    3. Blocking: Dengan menggunakan await for, eksekusi program akan diblokir sampai data tersedia di stream atau stream ditutup.
+
+-Lakukan commit hasil jawaban Soal 5 dengan pesan "W13: Jawaban Soal 5"
