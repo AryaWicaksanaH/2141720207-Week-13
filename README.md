@@ -1139,3 +1139,111 @@ answer :
 ![hape](docs/Praktikum%205/hape.gif)
 
 -Lalu lakukan commit dengan pesan "W13: Jawaban Soal 10,11".
+
+
+# Praktikum 6: StreamBuilder
+
+**first form of stream.dart**
+
+    import 'dart:math';
+
+    class NumberStream {
+    Stream<int> getNumbers() async* {
+        yield* Stream.periodic(const Duration(seconds: 1), (int t) {
+        Random random = Random();
+        int myNum = random.nextInt(10);
+        return myNum;
+        });
+    }
+    }
+
+
+**first form of main.dart**
+
+    import 'package:flutter/material.dart';
+    import 'stream.dart';
+    import 'dart:async';
+
+    void main() {
+    runApp(const MyApp());
+    }
+
+    class MyApp extends StatelessWidget {
+    const MyApp({super.key});
+
+    @override
+    Widget build(BuildContext context) {
+        return MaterialApp(
+        title: 'Stream',
+        theme: ThemeData(
+            primarySwatch: Colors.deepPurple,
+        ),
+        home: const StreamHomePage(),
+        );
+    }
+    }
+
+    class StreamHomePage extends StatefulWidget {
+    const StreamHomePage({super.key});
+
+    @override
+    State<StreamHomePage> createState() => _StreamHomePageState();
+    }
+
+    class _StreamHomePageState extends State<StreamHomePage> {
+    late Stream<int> numberStream;
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+        appBar: AppBar(
+            title: const Text('Stream'),
+        ),
+        body: StreamBuilder(
+            stream: numberStream,
+            initialData: 0,
+            builder: (context, snapshot) {
+            if (snapshot.hasError) {
+                print('Error!');
+            }
+            if (snapshot.hasData) {
+                return Center(
+                    child: Text(
+                snapshot.data.toString(),
+                style: const TextStyle(fontSize: 96),
+                ));
+            } else {
+                return const SizedBox.shrink();
+            }
+            },
+        ),
+        );
+    }
+
+    @override
+    void initState() {
+        numberStream = NumberStream().getNumbers();
+        super.initState();
+    }
+    }
+
+**Hasil running**
+
+![hape](docs/Praktikum%206/hape.gif)
+
+**Soal 12**
+
+-Jelaskan maksud kode pada langkah 3 dan 7 !
+
+answer : 
+
+    Langkah 3 :
+
+    Metode getNumber menggunakan Stream.periodic untuk menghasilkan sebuah stream bilangan bulat dengan waktu 1 detik. Sebuah bilangan acak antara 0 dan 9 dihasilkan menggunakan Random, dan bilangan acak ini kemudian dikirimkan ke dalam stream dengan bantuan yield* async* untuk menghasilkan stream dari nilai-nilai yang di-yield.
+
+    Langkah 7 :
+
+    Untuk membangun sebuah widget, StreamBuilder menggunakan data dari numberStream yang dihasilkan dari getNumber() pada NumberStream. Jika ada snapshot.hasData, widget akan menampilkan teks yang mengandung nilai data tersebut. Jika terjadi error, kita hanya mencetak pesan "Error!" tanpa menampilkan konten apa pun. Jika tidak ada data, kita kembalikan widget yang tidak terlihat. Ini memungkinkan tampilan untuk beradaptasi dengan perubahan data yang diterima dari stream dan menghasilkan tampilan yang sesuai dengan kondisi strream.
+
+-Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+
+-Lalu lakukan commit dengan pesan "W13: Jawaban Soal 12".
