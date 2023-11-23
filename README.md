@@ -55,3 +55,36 @@ Gantilah warna tema aplikasi sesuai kesukaan Anda.
         primarySwatch: Colors.blue,
 
 Lakukan commit hasil jawaban Soal 1 dengan pesan "W13: Jawaban Soal 1"
+
+**first form stream.dart**
+
+    import 'package:flutter/material.dart';
+
+    class ColorStream {
+    final List<Color> colors = [
+        Colors.blueGrey,
+        Colors.amber,
+        Colors.deepPurple,
+        Colors.lightBlue,
+        Colors.teal
+    ];
+    }
+
+**Soal 2**
+
+Tambahkan 5 warna lainnya sesuai keinginan Anda pada variabel colors tersebut.
+
+    final List<Color> colors = [
+        Colors.blueGrey,
+        Colors.amber,
+        Colors.deepPurple,
+        Colors.lightBlue,
+        Colors.teal,
+        Colors.red,
+        Colors.orange,
+        Colors.greenAccent,
+        Colors.deepOrange,
+        Colors.cyanAccent
+    ];
+
+Lakukan commit hasil jawaban Soal 2 dengan pesan "W13: Jawaban Soal 2"
