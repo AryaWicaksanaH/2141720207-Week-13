@@ -703,3 +703,150 @@ answer :
 
 -Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
 -Lalu lakukan commit dengan pesan "W13: Jawaban Soal 8".
+
+
+# Praktikum 4: Subscribe ke stream events
+
+**sixth form of main.dart**
+
+    //import 'dart:ffi';
+    import 'package:flutter/material.dart';
+    import 'stream.dart';
+    import 'dart:async';
+    import 'dart:math';
+
+    void main() {
+    runApp(const MyApp());
+    }
+
+    class MyApp extends StatelessWidget {
+    const MyApp({super.key});
+
+    @override
+    Widget build(BuildContext context) {
+        return MaterialApp(
+        title: 'Stream - Arya',
+        theme: ThemeData(
+            primarySwatch: Colors.blue,
+        ),
+        home: const StreamHomepage(),
+        );
+    }
+    }
+
+    class StreamHomepage extends StatefulWidget {
+    const StreamHomepage({super.key});
+
+    @override
+    State<StreamHomepage> createState() => _StreamHomePageState();
+    }
+
+    class _StreamHomePageState extends State<StreamHomepage> {
+    int lastNumber = 0;
+    Color bgColor = Colors.blueGrey;
+    late ColorStream colorStream;
+    late StreamController numberStreamController;
+    late NumberStream numberStream;
+    late StreamTransformer transformer;
+    late StreamSubscription subscription;
+
+    void changeColor() async {
+        colorStream.getColors().listen((eventColor) {
+        setState(() {
+            bgColor = eventColor;
+        });
+        });
+    }
+
+    void stopStream() {
+        numberStreamController.close();
+    }
+
+    @override
+    void initState() {
+        numberStream = NumberStream();
+        numberStreamController = numberStream.controller;
+        Stream stream = numberStreamController.stream;
+        subscription = stream.listen((event) {
+        setState(() {
+            lastNumber = event;
+        });
+        });
+        subscription.onError((error) {
+        setState(() {
+            lastNumber = -1;
+        });
+        });
+        subscription.onDone(() {
+        print('OnDone was called');
+        });
+        super.initState();
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+        appBar: AppBar(
+            title: const Text('Stream - Arya'),
+        ),
+        body: SizedBox(
+            width: double.infinity,
+            child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+                Text(lastNumber.toString()),
+                ElevatedButton(
+                onPressed: () => addRandomNumber(),
+                child: const Text('New Random Number'),
+                ),
+                ElevatedButton(
+                onPressed: () => stopStream(),
+                child: const Text('Stop Subscription'),
+                )
+            ],
+            ),
+        ),
+        );
+    }
+
+    @override
+    void dispose() {
+        numberStreamController.close();
+        subscription.cancel();
+        super.dispose();
+    }
+
+    void addRandomNumber() {
+        Random random = Random();
+        int myNum = random.nextInt(10);
+        if (!numberStreamController.isClosed) {
+        numberStream.addNumberToSink(myNum);
+        } else {
+        setState(() {
+            lastNumber = -1;
+        });
+        }
+    }
+    }
+
+**Hasil Running**
+
+![ss](docs/Praktikum%204/ss.png)
+![hape](docs/Praktikum%204/hape.gif)
+
+**Soal 9**
+
+-Jelaskan maksud kode langkah 2, 6 dan 8 tersebut!
+
+answer :
+
+    Langkah 2 : Menambahkan kode yang akan membuat objek NumberStream dan NumberStreamController. Objek NumberStream akan menghasilkan stream integer secara acak, dan objek NumberStreamController akan mengontrol stream tersebut.
+
+    Langkah 6 : menambahkan kode untuk membatalkan subscription di dispose(). Hal ini dilakukan untuk mencegah memory leak.
+
+    Langkah 8 : menambahkan kode untuk melihat apakah stream telah ditutup sebelum menambahkan data ke stream. Jika stream telah ditutup, nilai variabel lastNumber akan diubah menjadi nilai -1.
+
+-Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+
+-Lalu lakukan commit dengan pesan "W13: Jawaban Soal 9".
