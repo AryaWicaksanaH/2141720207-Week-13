@@ -41,17 +41,17 @@
     }
     }
 
-Soal 1
+**Soal 1**
 
-- Tambahkan nama panggilan Anda pada title app sebagai identitas hasil pekerjaan Anda.
+Tambahkan nama panggilan Anda pada title app sebagai identitas hasil pekerjaan Anda.
 
     Widget build(BuildContext context) {
-        return MaterialApp(
-            title: 'Stream - Arya',
+    return MaterialApp(
+      title: 'Stream - Arya'
 
-- Gantilah warna tema aplikasi sesuai kesukaan Anda.
+Gantilah warna tema aplikasi sesuai kesukaan Anda.
 
     theme: ThemeData(
         primarySwatch: Colors.blue,
 
-- Lakukan commit hasil jawaban Soal 1 dengan pesan "W13: Jawaban Soal 1"
+Lakukan commit hasil jawaban Soal 1 dengan pesan "W13: Jawaban Soal 1"
