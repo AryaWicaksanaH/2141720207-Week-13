@@ -1,7 +1,8 @@
 //import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'stream.dart';
+import 'dart:async';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -26,41 +27,69 @@ class StreamHomepage extends StatefulWidget {
   const StreamHomepage({super.key});
 
   @override
-  State<StreamHomepage> createState() => _StreamPageState();
+  State<StreamHomepage> createState() => _StreamHomePageState();
 }
 
-class _StreamPageState extends State<StreamHomepage> {
+class _StreamHomePageState extends State<StreamHomepage> {
+  int lastNumber = 0;
   Color bgColor = Colors.blueGrey;
   late ColorStream colorStream;
+  late StreamController numberStreamController;
+  late NumberStream numberStream;
 
   void changeColor() async {
-    // await for (var eventColor in colorStream.getColors()) {
-    //   setState(() {
-    //     bgColor = eventColor;
-    //   });
     colorStream.getColors().listen((eventColor) {
       setState(() {
         bgColor = eventColor;
       });
     });
-    }
   }
 
   @override
   void initState() {
+    numberStream = NumberStream();
+    numberStreamController = numberStream.controller;
+    Stream stream = numberStreamController.stream;
+    stream.listen((event) {
+      setState(() {
+        lastNumber = event;
+      });
+    });
     super.initState();
-    colorStream = ColorStream();
-    changeColor();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Stream - Arya'),
+      appBar: AppBar(
+        title: const Text('Stream - Arya'),
+      ),
+      body: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(lastNumber.toString()),
+            ElevatedButton(
+              onPressed: () => addRandomNumber(),
+              child: const Text('New Random Number'),
+            )
+          ],
         ),
-        body: Container(
-          decoration: BoxDecoration(color: bgColor),
-        ));
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    numberStreamController.close();
+    super.dispose();
+  }
+
+  void addRandomNumber() {
+    Random random = Random();
+    int myNum = random.nextInt(10);
+    numberStream.addNumberToSink(myNum);
   }
 }
