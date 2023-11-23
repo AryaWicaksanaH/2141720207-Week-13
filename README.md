@@ -1247,3 +1247,162 @@ answer :
 -Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
 
 -Lalu lakukan commit dengan pesan "W13: Jawaban Soal 12".
+
+
+# Praktikum 7: BLoC Pattern
+
+**form of main.dart**
+
+    import 'package:bloc_random_arya/random_screen.dart';
+    import 'package:flutter/material.dart';
+
+    void main() {
+    runApp(const MyApp());
+    }
+
+    class MyApp extends StatelessWidget {
+    const MyApp({super.key});
+
+    @override
+    Widget build(BuildContext context) {
+        return MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+            primarySwatch: Colors.blue,
+        ),
+        home: const RandomScreen(),
+        );
+    }
+    }
+
+    class MyHomePage extends StatefulWidget {
+    const MyHomePage({super.key, required this.title});
+    final String title;
+
+    @override
+    State<MyHomePage> createState() => _MyHomePageState();
+    }
+
+    class _MyHomePageState extends State<MyHomePage> {
+    int _counter = 0;
+
+    void _incrementCounter() {
+        setState(() {
+        _counter++;
+        });
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+        appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: Text(widget.title),
+        ),
+        body: Center(
+            child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+                const Text(
+                'You have pushed the button this many times:',
+                ),
+                Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.headlineMedium,
+                ),
+            ],
+            ),
+        ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: _incrementCounter,
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+        ),
+        );
+    }
+    }
+
+**form of random_screen.dart**
+
+    import 'package:flutter/material.dart';
+    import 'random_bloc.dart';
+
+    class RandomScreen extends StatefulWidget {
+    const RandomScreen({super.key});
+
+    @override
+    State<RandomScreen> createState() => _RandomScreenState();
+    }
+
+    class _RandomScreenState extends State<RandomScreen> {
+    final _bloc = RandomNumberBloc();
+
+    @override
+    void dispose() {
+        _bloc.dispose();
+        super.dispose();
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+        appBar: AppBar(title: const Text('Random Number Arya')),
+        body: Center(
+            child: StreamBuilder<int>(
+            stream: _bloc.randomNumber,
+            initialData: 0,
+            builder: (context, snapshot) {
+                return Text(
+                'Random Number: ${snapshot.data}',
+                style: const TextStyle(fontSize: 24),
+                );
+            },
+            ),
+        ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () => _bloc.generateRandom.add(null),
+            child: const Icon(Icons.refresh),
+        ),
+        );
+    }
+    }
+
+**form of random_bloc.dart**
+
+    import 'dart:async';
+    import 'dart:math';
+
+    class RandomNumberBloc {
+    final _generateRandomController = StreamController<void>();
+    final _randomNumberController = StreamController<int>();
+    Sink<void> get generateRandom => _generateRandomController.sink;
+    Stream<int> get randomNumber => _randomNumberController.stream;
+
+    RandomNumberBloc() {
+        _generateRandomController.stream.listen((_) {
+        final random = Random().nextInt(10);
+        _randomNumberController.sink.add(random);
+        });
+    }
+
+    void dispose() {
+        _generateRandomController.close();
+        _randomNumberController.close();
+    }
+    }
+
+**Hasil running**
+
+![hape](docs/Praktikum%207/hape.gif)
+
+**Soal 13**
+
+-Jelaskan maksud praktikum ini ! Dimanakah letak konsep pola BLoC-nya ?
+
+answer : Pada random_bloc, RandomNumberBloc memiliki dua StreamController: _generateRandomController berfungsi sebagai penerima perintah untuk menghasilkan angka acak dan _randomNumberController mengirimkan angka acak ke tampilan UI. Saat _generateRandomController menerima trigger atau event, blok tersebut memproses event tersebut dengan menggunakan Random().
+
+RandomScreen menampilkan angka acak yang diterima dari RandomNumberBloc pada file random_screen. Kemudian, RandomScreen menggunakan StreamBuilder untuk membangun tampilan yang terhubung ke stream _bloc.randomNumber. Ini memungkinkan UI secara otomatis diperbarui ketika ada perubahan data di dalam stream, sehingga teks yang menampilkan angka acak selalu terupdate sesuai dengan nilai terbaru yang diterima dari stream. Tombol Action Floating berfungsi untuk memulai proses pengacakan angka. Setelah menekan tombol ini, onPressed akan mengirimkan perintah melalui generateRandom.add(null) ke _generateRandomController pada BLoC. Proses ini akan memulai pembuatan angka acak dan mengirimkannya kembali ke UI melalui stream.
+
+-Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+
+-Lalu lakukan commit dengan pesan "W13: Jawaban Soal 13".
